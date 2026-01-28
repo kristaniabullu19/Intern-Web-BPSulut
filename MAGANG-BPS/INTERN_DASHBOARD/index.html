@@ -1,0 +1,2361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPS Intern Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* BPS Official Colors */
+            --primary: #07213b;        /* BPS Blue */
+            --primary-light: #3385D6;
+            --primary-dark: #004C99;
+            --accent: #FF8C00;         /* BPS Orange */
+            --accent-hover: #E67E00;
+            --success: #00A651;        /* BPS Green */
+            --success-light: #33B86E;
+            --success-dark: #008741;
+            
+            /* Neutral Colors */
+            --bg-main: #F8F9FA;
+            --bg-card: #FFFFFF;
+            --text-primary: #212529;
+            --text-secondary: #6C757D;
+            --border: #DEE2E6;
+            --shadow: rgba(0, 102, 204, 0.08);
+            --warning: #FFC107;
+            --danger: #DC3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 2rem;
+        }
+
+        .login-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 450px;
+            width: 100%;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Public Sans', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .login-btn {
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .login-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+
+        .demo-info {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-main);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .demo-info strong {
+            color: var(--primary);
+        }
+
+        /* Dashboard */
+        .dashboard-screen {
+            display: none;
+        }
+
+        .dashboard-screen.active {
+            display: block;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .bps-logo {
+            width: 70px;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .bps-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-text h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text p {
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .user-info {
+            text-align: right;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-role {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        .logout-btn:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 16px var(--shadow);
+            animation: slideUp 0.6s ease-out;
+            position: relative;
+        }
+
+        .profile-edit-btn {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-edit-btn:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .profile-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .profile-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .profile-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 1.75rem;
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            box-shadow: 0 4px 16px var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            box-shadow: 0 4px 16px var(--shadow);
+            animation: slideUp 0.6s ease-out;
+            animation-delay: 0.2s;
+            animation-fill-mode: both;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.75rem;
+            color: var(--primary);
+        }
+
+        .btn {
+            padding: 0.65rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: var(--success-dark);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #C82333;
+        }
+
+        .btn-small {
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Attendance Section */
+        .attendance-today {
+            background: var(--bg-main);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .today-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .today-date {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .checkin-checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkin-box, .checkout-box {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            text-align: center;
+        }
+
+        .checkin-box.active {
+            border-color: var(--success);
+            background: #E8F5E9;
+        }
+
+        .checkout-box.active {
+            border-color: var(--accent);
+            background: #FFF3E0;
+        }
+
+        .checkin-label, .checkout-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .time-display {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'DM Serif Display', serif;
+            margin-bottom: 0.75rem;
+        }
+
+        .time-display.not-set {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .attendance-photo {
+            width: 100%;
+            max-width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            border: 2px solid var(--border);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-badge.checked-in {
+            background: #C8E6C9;
+            color: var(--success-dark);
+        }
+
+        .status-badge.checked-out {
+            background: #FFE0B2;
+            color: var(--accent-hover);
+        }
+
+        .attendance-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .attendance-history {
+            margin-top: 1.5rem;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .history-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: var(--bg-main);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .history-date {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+            min-width: 80px;
+        }
+
+        .history-times {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .history-time {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--text-secondary);
+        }
+
+        .history-duration {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Attendance Recap Table */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .attendance-table thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        .attendance-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .attendance-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .attendance-table tbody tr:hover {
+            background: var(--bg-main);
+        }
+
+        .attendance-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .table-status.present {
+            background: #C8E6C9;
+            color: var(--success-dark);
+        }
+
+        .table-status.late {
+            background: #FFF9C4;
+            color: #F57C00;
+        }
+
+        .table-status.absent {
+            background: #FFCDD2;
+            color: #C62828;
+        }
+
+        .table-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .table-photo:hover {
+            transform: scale(1.5);
+            z-index: 10;
+        }
+
+        /* To-Do List Section */
+        .todo-input-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .todo-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Public Sans', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .todo-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .todo-list {
+            list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-main);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .todo-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .todo-item.completed {
+            opacity: 0.6;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+        }
+
+        .todo-checkbox {
+            width: 24px;
+            height: 24px;
+            margin-right: 1rem;
+            cursor: pointer;
+            accent-color: var(--success);
+        }
+
+        .todo-text {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .todo-delete {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.25rem 0.5rem;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+
+        .todo-delete:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Announcements Section */
+        .announcement-full {
+            grid-column: 1 / -1;
+        }
+
+        .announcements-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .announcement-item {
+            background: var(--bg-main);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .announcement-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .announcement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+
+        .announcement-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .announcement-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .announcement-content {
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .announcement-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .badge-important {
+            background: #FFCDD2;
+            color: #C62828;
+        }
+
+        .badge-info {
+            background: #BBDEFB;
+            color: #1565C0;
+        }
+
+        /* Camera Modal */
+        .camera-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .camera-modal.active {
+            display: flex;
+        }
+
+        .camera-container {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .camera-header {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .camera-view {
+            position: relative;
+            width: 100%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        #cameraVideo, #capturedCanvas {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        #capturedCanvas {
+            display: none;
+        }
+
+        .camera-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .camera-info {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Edit Profile Modal */
+        .edit-profile-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1500;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .edit-profile-modal.active {
+            display: flex;
+        }
+
+        .edit-profile-container {
+            background: var(--bg-card);
+            padding: 2.5rem;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 100%;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        .edit-profile-header {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .edit-profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .edit-profile-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Scrollbar Styling */
+        .todo-list::-webkit-scrollbar,
+        .history-list::-webkit-scrollbar,
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .todo-list::-webkit-scrollbar-track,
+        .history-list::-webkit-scrollbar-track,
+        .table-container::-webkit-scrollbar-track {
+            background: var(--bg-main);
+            border-radius: 4px;
+        }
+
+        .todo-list::-webkit-scrollbar-thumb,
+        .history-list::-webkit-scrollbar-thumb,
+        .table-container::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        .todo-list::-webkit-scrollbar-thumb:hover,
+        .history-list::-webkit-scrollbar-thumb:hover,
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .announcement-full {
+                grid-column: 1;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .profile-avatar {
+                margin: 0 auto;
+            }
+
+            .profile-edit-btn {
+                position: static;
+                margin: 0 auto 1.5rem;
+                display: block;
+                width: fit-content;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .logo-section {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .bps-logo {
+                width: 60px;
+            }
+
+            .logo-text {
+                text-align: center;
+            }
+
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo-text h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .todo-input-group {
+                flex-direction: column;
+            }
+
+            .attendance-actions {
+                flex-direction: column;
+            }
+
+            .checkin-checkout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .attendance-table {
+                font-size: 0.8rem;
+            }
+
+            .attendance-table th,
+            .attendance-table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .login-container {
+                padding: 2rem;
+            }
+
+            .camera-controls {
+                flex-direction: column;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        .modal-header {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="login-logo"></div>
+                <img src="logo_bps.png" alt="BPS Logo" class="bps-logo">
+                <h1 class="login-title">BPS Intern Portal</h1>
+                <p class="login-subtitle">Badan Pusat Statistik</p>
+            </div>
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" class="form-input" id="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" class="form-input" id="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            <div class="demo-info">
+                <strong>Demo Credentials:</strong><br>
+                Username: <strong>intern</strong><br>
+                Password: <strong>bps2026</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div class="dashboard-screen" id="dashboardScreen">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="logo_bps.png" alt="BPS Logo" class="bps-logo">
+                    <div class="logo-text">
+                        <h1>BPS Intern Portal</h1>
+                        <p>Badan Pusat Statistik</p>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-details">
+                        <div class="user-name" id="headerUserName">Andi Pratama</div>
+                        <div class="user-role" id="headerUserRole">Intern · Data Analysis Division</div>
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <button class="profile-edit-btn" onclick="openEditProfile()">Edit Profile</button>
+                <div class="profile-grid">
+                    <div class="profile-avatar">
+                        👤
+                    </div>
+                    <div class="profile-details">
+                        <div class="profile-item">
+                            <div class="profile-label">Full Name</div>
+                            <div class="profile-value" id="profileName">Andi Pratama</div>
+                        </div>
+                        <div class="profile-item">
+                            <div class="profile-label">Division</div>
+                            <div class="profile-value" id="profileDivision">Data Analysis Division</div>
+                        </div>
+                        <div class="profile-item">
+                            <div class="profile-label">University</div>
+                            <div class="profile-value" id="profileUniversity">Universitas Indonesia</div>
+                        </div>
+                        <div class="profile-item">
+                            <div class="profile-label">Faculty</div>
+                            <div class="profile-value" id="profileFaculty">Faculty of Mathematics and Natural Sciences</div>
+                        </div>
+                        <div class="profile-item">
+                            <div class="profile-label">Internship Period</div>
+                            <div class="profile-value" id="profilePeriod">January 6, 2026 - March 6, 2026</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-number" id="attendanceRate">95%</div>
+                    <div class="stat-label">Attendance Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-number" id="tasksCompleted">12</div>
+                    <div class="stat-label">Tasks Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-number" id="activeTasks">5</div>
+                    <div class="stat-label">Active Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-number" id="daysPresent">19</div>
+                    <div class="stat-label">Days Present</div>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="main-grid">
+                <!-- Attendance Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Attendance</h2>
+                    </div>
+                    
+                    <div class="attendance-today">
+                        <div class="today-label">Today's Attendance</div>
+                        <div class="today-date" id="todayDate"></div>
+                        
+                        <div class="checkin-checkout-grid">
+                            <div class="checkin-box" id="checkinBox">
+                                <div class="checkin-label">Check In</div>
+                                <div class="time-display not-set" id="checkinTime">Not Set</div>
+                                <span class="status-badge checked-in" id="checkinBadge" style="display: none;">Checked In</span>
+                                <img id="checkinPhoto" class="attendance-photo" style="display: none;" alt="Check-in photo">
+                            </div>
+                            
+                            <div class="checkout-box" id="checkoutBox">
+                                <div class="checkout-label">Check Out</div>
+                                <div class="time-display not-set" id="checkoutTime">Not Set</div>
+                                <span class="status-badge checked-out" id="checkoutBadge" style="display: none;">Checked Out</span>
+                                <img id="checkoutPhoto" class="attendance-photo" style="display: none;" alt="Check-out photo">
+                            </div>
+                        </div>
+
+                        <div class="attendance-actions">
+                            <button class="btn btn-success" id="checkinBtn" onclick="openCamera('checkin')">
+                                📷 Check In
+                            </button>
+                            <button class="btn btn-primary" id="checkoutBtn" onclick="openCamera('checkout')" disabled>
+                                📷 Check Out
+                            </button>
+                        </div>
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <button class="btn btn-danger btn-small" onclick="clearTodayAttendance()" style="font-size: 0.75rem;">
+                                🗑️ Clear Today's Attendance
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="attendance-history">
+                        <div class="history-header">
+                            <div class="history-title">Recent History</div>
+                            <button class="btn btn-secondary btn-small" onclick="toggleHistoryView()">
+                                <span id="historyToggle">Show All</span>
+                            </button>
+                        </div>
+                        <div class="history-list" id="historyList"></div>
+                    </div>
+                </div>
+
+                <!-- To-Do List Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">To-Do List</h2>
+                    </div>
+
+                    <div class="todo-input-group">
+                        <input type="text" class="todo-input" id="todoInput" placeholder="Add a new task...">
+                        <button class="btn btn-primary" onclick="addTodo()">+ Add</button>
+                    </div>
+
+                    <ul class="todo-list" id="todoList"></ul>
+                </div>
+            </div>
+
+            <!-- Attendance Recap Section -->
+            <div class="section announcement-full">
+                <div class="section-header">
+                    <h2 class="section-title">Attendance Recap</h2>
+                    <button class="btn btn-secondary btn-small" onclick="exportAttendance()">📥 Export</button>
+                </div>
+
+                <div class="table-container">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Day</th>
+                                <th>Check In</th>
+                                <th>Check Out</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Photo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Announcements Section -->
+            <div class="section announcement-full">
+                <div class="section-header">
+                    <h2 class="section-title">Announcements</h2>
+                </div>
+
+                <div class="announcements-list" id="announcementsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="edit-profile-modal" id="editProfileModal">
+        <div class="edit-profile-container">
+            <h3 class="edit-profile-header">Edit Profile</h3>
+            <form class="edit-profile-form" onsubmit="saveProfile(event)">
+                <div class="form-group">
+                    <label class="form-label" for="editName">Full Name</label>
+                    <input type="text" class="form-input" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="editDivision">Division</label>
+                    <input type="text" class="form-input" id="editDivision" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="editUniversity">University</label>
+                    <input type="text" class="form-input" id="editUniversity" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="editFaculty">Faculty</label>
+                    <input type="text" class="form-input" id="editFaculty" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="editStartDate">Internship Start Date</label>
+                    <input type="date" class="form-input" id="editStartDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="editEndDate">Internship End Date</label>
+                    <input type="date" class="form-input" id="editEndDate" required>
+                </div>
+                <div class="edit-profile-buttons">
+                    <button type="submit" class="btn btn-success" style="flex: 1;">💾 Save Changes</button>
+                    <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeEditProfile()">✕ Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Camera Modal -->
+    <div class="camera-modal" id="cameraModal">
+        <div class="camera-container">
+            <h3 class="camera-header" id="cameraTitle">Take Attendance Photo</h3>
+            <div class="camera-info" id="cameraInfo">Position your face in the frame</div>
+            <div class="camera-view">
+                <video id="cameraVideo" autoplay playsinline></video>
+                <canvas id="capturedCanvas"></canvas>
+            </div>
+            <div class="camera-controls">
+                <button class="btn btn-success" id="captureBtn" onclick="capturePhoto()">📷 Capture</button>
+                <button class="btn btn-primary" id="retakeBtn" onclick="retakePhoto()" style="display: none;">🔄 Retake</button>
+                <button class="btn btn-success" id="confirmBtn" onclick="confirmPhoto()" style="display: none;">✓ Confirm</button>
+                <button class="btn btn-secondary" onclick="closeCamera()">✕ Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h3 class="modal-header" id="modalTitle">Notification</h3>
+            <p id="modalMessage"></p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authentication & Profile Data
+        let isLoggedIn = false;
+        let currentUser = null;
+        const demoCredentials = {
+            username: 'intern',
+            password: 'bps2026'
+        };
+
+        let profileData = {
+            name: "Andi Pratama",
+            division: "Data Analysis Division",
+            university: "Universitas Indonesia",
+            faculty: "Faculty of Mathematics and Natural Sciences",
+            startDate: "2026-01-06",
+            endDate: "2026-03-06"
+        };
+
+        // Data Storage
+        let currentDate = new Date();
+        let attendanceRecords = [];
+        let todayAttendance = null;
+        let todos = [];
+        let showFullHistory = false;
+        let cameraStream = null;
+        let currentAttendanceType = null;
+        let capturedPhotoData = null;
+        let announcements = [
+            {
+                title: "Intern Orientation Session",
+                content: "Mandatory orientation for all new interns will be held on Monday, February 3rd at 09:00 AM in the main conference room.",
+                date: "2026-01-25",
+                type: "important"
+            },
+            {
+                title: "Data Collection Workshop",
+                content: "Join us for a hands-on workshop on modern data collection techniques. Registration closes on January 31st.",
+                date: "2026-01-24",
+                type: "info"
+            },
+            {
+                title: "Monthly Report Deadline",
+                content: "Please submit your monthly progress reports by January 31st, 2026. Use the standard template available on the shared drive.",
+                date: "2026-01-20",
+                type: "important"
+            },
+            {
+                title: "Office Hours Extended",
+                content: "Starting next week, office hours will be extended until 6:00 PM on weekdays to accommodate project deadlines.",
+                date: "2026-01-18",
+                type: "info"
+            }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            
+            // Add enter key support for todo input
+            document.getElementById('todoInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTodo();
+                }
+            });
+
+            // Check for date change every minute to reset attendance UI for new day
+            setInterval(function() {
+                updateTodayDate();
+                checkTodayAttendance();
+            }, 60000); // Check every minute
+        });
+
+        // Authentication Functions
+        function checkLoginStatus() {
+            const savedLogin = localStorage.getItem('isLoggedIn');
+            const savedUser = localStorage.getItem('currentUser');
+            
+            if (savedLogin === 'true' && savedUser) {
+                isLoggedIn = true;
+                currentUser = savedUser;
+                showDashboard();
+            } else {
+                showLogin();
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === demoCredentials.username && password === demoCredentials.password) {
+                isLoggedIn = true;
+                currentUser = username;
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('currentUser', username);
+                showDashboard();
+            } else {
+                showModal('Login Failed', 'Invalid username or password. Please try again.');
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                isLoggedIn = false;
+                currentUser = null;
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('currentUser');
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('dashboardScreen').classList.remove('active');
+        }
+
+        function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboardScreen').classList.add('active');
+            
+            // Initialize dashboard data
+            loadData();
+            loadProfile();
+            updateTodayDate();
+            checkTodayAttendance();
+            renderTodos();
+            renderAnnouncements();
+            renderAttendanceHistory();
+            renderAttendanceTable();
+            updateStats();
+        }
+
+        // Profile Functions
+        function loadProfile() {
+            const savedProfile = localStorage.getItem('profileData');
+            if (savedProfile) {
+                profileData = JSON.parse(savedProfile);
+            }
+            
+            document.getElementById('profileName').textContent = profileData.name;
+            document.getElementById('profileDivision').textContent = profileData.division;
+            document.getElementById('profileUniversity').textContent = profileData.university;
+            document.getElementById('profileFaculty').textContent = profileData.faculty;
+            
+            document.getElementById('headerUserName').textContent = profileData.name;
+            document.getElementById('headerUserRole').textContent = `Intern · ${profileData.division}`;
+            
+            const startDate = new Date(profileData.startDate).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            const endDate = new Date(profileData.endDate).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('profilePeriod').textContent = `${startDate} - ${endDate}`;
+        }
+
+        function openEditProfile() {
+            document.getElementById('editName').value = profileData.name;
+            document.getElementById('editDivision').value = profileData.division;
+            document.getElementById('editUniversity').value = profileData.university;
+            document.getElementById('editFaculty').value = profileData.faculty;
+            document.getElementById('editStartDate').value = profileData.startDate;
+            document.getElementById('editEndDate').value = profileData.endDate;
+            
+            document.getElementById('editProfileModal').classList.add('active');
+        }
+
+        function closeEditProfile() {
+            document.getElementById('editProfileModal').classList.remove('active');
+        }
+
+        function saveProfile(event) {
+            event.preventDefault();
+            
+            profileData.name = document.getElementById('editName').value;
+            profileData.division = document.getElementById('editDivision').value;
+            profileData.university = document.getElementById('editUniversity').value;
+            profileData.faculty = document.getElementById('editFaculty').value;
+            profileData.startDate = document.getElementById('editStartDate').value;
+            profileData.endDate = document.getElementById('editEndDate').value;
+            
+            localStorage.setItem('profileData', JSON.stringify(profileData));
+            loadProfile();
+            closeEditProfile();
+            showModal('Profile Updated', 'Your profile has been successfully updated!');
+        }
+
+        // Local Storage Functions
+        function saveData() {
+            localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+
+        function loadData() {
+            const savedAttendance = localStorage.getItem('attendanceRecords');
+            const savedTodos = localStorage.getItem('todos');
+            
+            if (savedAttendance) {
+                attendanceRecords = JSON.parse(savedAttendance);
+            } else {
+                // Initialize with sample attendance history
+                attendanceRecords = [
+                    {
+                        date: "2026-01-24",
+                        checkIn: "08:30",
+                        checkOut: "17:15",
+                        duration: "8h 45m",
+                        status: "Late",
+                        checkinPhoto: null,
+                        checkoutPhoto: null
+                    },
+                    {
+                        date: "2026-01-23",
+                        checkIn: "08:45",
+                        checkOut: "17:30",
+                        duration: "8h 45m",
+                        status: "Late",
+                        checkinPhoto: null,
+                        checkoutPhoto: null
+                    },
+                    {
+                        date: "2026-01-22",
+                        checkIn: "08:15",
+                        checkOut: "17:00",
+                        duration: "8h 45m",
+                        status: "Late",
+                        checkinPhoto: null,
+                        checkoutPhoto: null
+                    },
+                    {
+                        date: "2026-01-21",
+                        checkIn: "08:35",
+                        checkOut: "17:20",
+                        duration: "8h 45m",
+                        status: "Late",
+                        checkinPhoto: null,
+                        checkoutPhoto: null
+                    },
+                    {
+                        date: "2026-01-20",
+                        checkIn: "08:25",
+                        checkOut: "17:10",
+                        duration: "8h 45m",
+                        status: "Late",
+                        checkinPhoto: null,
+                        checkoutPhoto: null
+                    },
+                    {
+                        date: "2026-01-17",
+                        checkIn: "09:15",
+                        checkOut: "17:00",
+                        duration: "7h 45m",
+                        status: "Late",
+                        checkinPhoto: null,
+                        checkoutPhoto: null
+                    }
+                ];
+            }
+            
+            if (savedTodos) {
+                todos = JSON.parse(savedTodos);
+            } else {
+                // Initialize with sample todos
+                todos = [
+                    { id: 1, text: "Complete data entry for Q4 survey", completed: false },
+                    { id: 2, text: "Review statistical analysis methodology", completed: true },
+                    { id: 3, text: "Attend team meeting at 2 PM", completed: false },
+                    { id: 4, text: "Submit weekly progress report", completed: false },
+                    { id: 5, text: "Update project documentation", completed: true }
+                ];
+            }
+        }
+
+        // Date Functions
+        function updateTodayDate() {
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateElement = document.getElementById('todayDate');
+            if (dateElement) {
+                dateElement.textContent = today.toLocaleDateString('en-US', options);
+            }
+        }
+
+        function checkTodayAttendance() {
+            const today = formatDate(new Date());
+            
+            // Find today's attendance record
+            todayAttendance = attendanceRecords.find(record => record.date === today);
+            
+            // Always reset UI first
+            resetAttendanceUI();
+            
+            // If there's a record for today, populate it
+            if (todayAttendance) {
+                // Update check-in display if exists
+                if (todayAttendance.checkIn) {
+                    document.getElementById('checkinTime').textContent = todayAttendance.checkIn;
+                    document.getElementById('checkinTime').classList.remove('not-set');
+                    document.getElementById('checkinBadge').style.display = 'inline-block';
+                    document.getElementById('checkinBox').classList.add('active');
+                    document.getElementById('checkinBtn').disabled = true;
+                    document.getElementById('checkoutBtn').disabled = false;
+                    
+                    if (todayAttendance.checkinPhoto) {
+                        const img = document.getElementById('checkinPhoto');
+                        img.src = todayAttendance.checkinPhoto;
+                        img.style.display = 'block';
+                    }
+                }
+                
+                // Update check-out display if exists
+                if (todayAttendance.checkOut) {
+                    document.getElementById('checkoutTime').textContent = todayAttendance.checkOut;
+                    document.getElementById('checkoutTime').classList.remove('not-set');
+                    document.getElementById('checkoutBadge').style.display = 'inline-block';
+                    document.getElementById('checkoutBox').classList.add('active');
+                    document.getElementById('checkoutBtn').disabled = true;
+                    
+                    if (todayAttendance.checkoutPhoto) {
+                        const img = document.getElementById('checkoutPhoto');
+                        img.src = todayAttendance.checkoutPhoto;
+                        img.style.display = 'block';
+                    }
+                }
+            } else {
+                // No record for today - ensure buttons are enabled
+                document.getElementById('checkinBtn').disabled = false;
+                document.getElementById('checkoutBtn').disabled = true;
+            }
+        }
+
+        function resetAttendanceUI() {
+            // Reset check-in
+            const checkinTime = document.getElementById('checkinTime');
+            const checkinBadge = document.getElementById('checkinBadge');
+            const checkinBox = document.getElementById('checkinBox');
+            const checkinPhoto = document.getElementById('checkinPhoto');
+            const checkinBtn = document.getElementById('checkinBtn');
+            
+            if (checkinTime) {
+                checkinTime.textContent = 'Not Set';
+                checkinTime.classList.add('not-set');
+            }
+            if (checkinBadge) checkinBadge.style.display = 'none';
+            if (checkinBox) checkinBox.classList.remove('active');
+            if (checkinPhoto) checkinPhoto.style.display = 'none';
+            if (checkinBtn) checkinBtn.disabled = false;
+            
+            // Reset check-out
+            const checkoutTime = document.getElementById('checkoutTime');
+            const checkoutBadge = document.getElementById('checkoutBadge');
+            const checkoutBox = document.getElementById('checkoutBox');
+            const checkoutPhoto = document.getElementById('checkoutPhoto');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            
+            if (checkoutTime) {
+                checkoutTime.textContent = 'Not Set';
+                checkoutTime.classList.add('not-set');
+            }
+            if (checkoutBadge) checkoutBadge.style.display = 'none';
+            if (checkoutBox) checkoutBox.classList.remove('active');
+            if (checkoutPhoto) checkoutPhoto.style.display = 'none';
+            if (checkoutBtn) checkoutBtn.disabled = true;
+        }
+
+        // Camera Functions
+        async function openCamera(type) {
+            currentAttendanceType = type;
+            const modal = document.getElementById('cameraModal');
+            const title = document.getElementById('cameraTitle');
+            const info = document.getElementById('cameraInfo');
+            
+            title.textContent = type === 'checkin' ? 'Check In Photo' : 'Check Out Photo';
+            info.textContent = 'Position your face in the frame';
+            
+            modal.classList.add('active');
+            
+            try {
+                const video = document.getElementById('cameraVideo');
+                cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: 'user',
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    } 
+                });
+                video.srcObject = cameraStream;
+                video.style.display = 'block';
+                
+                document.getElementById('capturedCanvas').style.display = 'none';
+                document.getElementById('captureBtn').style.display = 'inline-block';
+                document.getElementById('retakeBtn').style.display = 'none';
+                document.getElementById('confirmBtn').style.display = 'none';
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                showModal('Camera Error', 'Unable to access camera. Please check permissions and try again.');
+                closeCamera();
+            }
+        }
+
+        function capturePhoto() {
+            const video = document.getElementById('cameraVideo');
+            const canvas = document.getElementById('capturedCanvas');
+            const context = canvas.getContext('2d');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            capturedPhotoData = canvas.toDataURL('image/jpeg', 0.8);
+            
+            video.style.display = 'none';
+            canvas.style.display = 'block';
+            
+            document.getElementById('captureBtn').style.display = 'none';
+            document.getElementById('retakeBtn').style.display = 'inline-block';
+            document.getElementById('confirmBtn').style.display = 'inline-block';
+            document.getElementById('cameraInfo').textContent = 'Review your photo';
+        }
+
+        function retakePhoto() {
+            const video = document.getElementById('cameraVideo');
+            const canvas = document.getElementById('capturedCanvas');
+            
+            video.style.display = 'block';
+            canvas.style.display = 'none';
+            
+            document.getElementById('captureBtn').style.display = 'inline-block';
+            document.getElementById('retakeBtn').style.display = 'none';
+            document.getElementById('confirmBtn').style.display = 'none';
+            document.getElementById('cameraInfo').textContent = 'Position your face in the frame';
+            
+            capturedPhotoData = null;
+        }
+
+        function confirmPhoto() {
+            if (!capturedPhotoData) {
+                showModal('Error', 'No photo captured. Please try again.');
+                return;
+            }
+            
+            if (currentAttendanceType === 'checkin') {
+                processCheckIn();
+            } else if (currentAttendanceType === 'checkout') {
+                processCheckOut();
+            }
+            
+            closeCamera();
+        }
+
+        function closeCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            
+            document.getElementById('cameraModal').classList.remove('active');
+            document.getElementById('cameraVideo').style.display = 'block';
+            document.getElementById('capturedCanvas').style.display = 'none';
+            document.getElementById('captureBtn').style.display = 'inline-block';
+            document.getElementById('retakeBtn').style.display = 'none';
+            document.getElementById('confirmBtn').style.display = 'none';
+            
+            capturedPhotoData = null;
+            currentAttendanceType = null;
+        }
+
+        // Attendance Functions
+        function processCheckIn() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+            const today = formatDate(now);
+            
+            // Determine status based on check-in time (7:30 AM threshold)
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            const totalMinutes = hour * 60 + minute;
+            const lateThreshold = 7 * 60 + 30; // 07:30 AM
+            const status = totalMinutes > lateThreshold ? 'Late' : 'Present';
+            
+            // Create or update today's record
+            todayAttendance = attendanceRecords.find(record => record.date === today);
+            
+            if (!todayAttendance) {
+                todayAttendance = {
+                    date: today,
+                    checkIn: timeString,
+                    checkOut: null,
+                    duration: null,
+                    status: status,
+                    checkinPhoto: capturedPhotoData,
+                    checkoutPhoto: null
+                };
+                attendanceRecords.unshift(todayAttendance);
+            } else {
+                todayAttendance.checkIn = timeString;
+                todayAttendance.status = status;
+                todayAttendance.checkinPhoto = capturedPhotoData;
+            }
+            
+            // Update UI
+            document.getElementById('checkinTime').textContent = timeString;
+            document.getElementById('checkinTime').classList.remove('not-set');
+            document.getElementById('checkinBadge').style.display = 'inline-block';
+            document.getElementById('checkinBox').classList.add('active');
+            
+            const img = document.getElementById('checkinPhoto');
+            img.src = capturedPhotoData;
+            img.style.display = 'block';
+            
+            document.getElementById('checkinBtn').disabled = true;
+            document.getElementById('checkoutBtn').disabled = false;
+            
+            saveData();
+            renderAttendanceHistory();
+            renderAttendanceTable();
+            updateStats();
+            showModal('Check In Successful', `You have checked in at ${timeString}`);
+        }
+
+        function processCheckOut() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+            
+            if (todayAttendance && todayAttendance.checkIn) {
+                todayAttendance.checkOut = timeString;
+                todayAttendance.checkoutPhoto = capturedPhotoData;
+                todayAttendance.duration = calculateDuration(todayAttendance.checkIn, timeString);
+                
+                // Update UI
+                document.getElementById('checkoutTime').textContent = timeString;
+                document.getElementById('checkoutTime').classList.remove('not-set');
+                document.getElementById('checkoutBadge').style.display = 'inline-block';
+                document.getElementById('checkoutBox').classList.add('active');
+                
+                const img = document.getElementById('checkoutPhoto');
+                img.src = capturedPhotoData;
+                img.style.display = 'block';
+                
+                document.getElementById('checkoutBtn').disabled = true;
+                
+                saveData();
+                renderAttendanceHistory();
+                renderAttendanceTable();
+                updateStats();
+                showModal('Check Out Successful', `You have checked out at ${timeString}. Total duration: ${todayAttendance.duration}`);
+            }
+        }
+
+        function calculateDuration(checkIn, checkOut) {
+            const [inHour, inMin] = checkIn.split(':').map(Number);
+            const [outHour, outMin] = checkOut.split(':').map(Number);
+            
+            let hours = outHour - inHour;
+            let minutes = outMin - inMin;
+            
+            if (minutes < 0) {
+                hours--;
+                minutes += 60;
+            }
+            
+            return `${hours}h ${minutes}m`;
+        }
+
+        function renderAttendanceHistory() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = '';
+            
+            const recordsToShow = showFullHistory ? attendanceRecords : attendanceRecords.slice(0, 5);
+            
+            if (recordsToShow.length === 0) {
+                list.innerHTML = '<div class="empty-state">No attendance records yet.</div>';
+                return;
+            }
+            
+            recordsToShow.forEach(record => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                
+                const displayDate = new Date(record.date).toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                
+                div.innerHTML = `
+                    <div class="history-date">${displayDate}</div>
+                    <div class="history-times">
+                        <div class="history-time">
+                            🕐 ${record.checkIn || '—'}
+                        </div>
+                        <div class="history-time">
+                            🕔 ${record.checkOut || '—'}
+                        </div>
+                    </div>
+                    <div class="history-duration">${record.duration || 'Ongoing'}</div>
+                `;
+                
+                list.appendChild(div);
+            });
+        }
+
+        function toggleHistoryView() {
+            showFullHistory = !showFullHistory;
+            document.getElementById('historyToggle').textContent = showFullHistory ? 'Show Less' : 'Show All';
+            renderAttendanceHistory();
+        }
+
+        // Function to manually clear today's attendance (for testing/debugging)
+        function clearTodayAttendance() {
+            if (confirm('Are you sure you want to clear today\'s attendance? This will allow you to check in again.')) {
+                const today = formatDate(new Date());
+                
+                // Remove today's record from the array
+                attendanceRecords = attendanceRecords.filter(record => record.date !== today);
+                todayAttendance = null;
+                
+                // Save and refresh
+                saveData();
+                resetAttendanceUI();
+                checkTodayAttendance();
+                renderAttendanceHistory();
+                renderAttendanceTable();
+                updateStats();
+                
+                showModal('Attendance Cleared', 'Today\'s attendance has been cleared. You can now check in again.');
+            }
+        }
+
+        // Attendance Table Functions
+        function renderAttendanceTable() {
+            const tbody = document.getElementById('attendanceTableBody');
+            tbody.innerHTML = '';
+            
+            if (attendanceRecords.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No attendance records yet.</td></tr>';
+                return;
+            }
+            
+            attendanceRecords.forEach(record => {
+                const tr = document.createElement('tr');
+                
+                const date = new Date(record.date);
+                const formattedDate = date.toLocaleDateString('en-US', { 
+                    year: 'numeric',
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+                
+                const statusClass = record.status === 'Present' ? 'present' : 
+                                   record.status === 'Late' ? 'late' : 'absent';
+                
+                const photoHtml = record.checkinPhoto ? 
+                    `<img src="${record.checkinPhoto}" class="table-photo" alt="Attendance photo" title="Click to view">` : 
+                    '—';
+                
+                tr.innerHTML = `
+                    <td>${formattedDate}</td>
+                    <td>${dayName}</td>
+                    <td>${record.checkIn || '—'}</td>
+                    <td>${record.checkOut || '—'}</td>
+                    <td>${record.duration || '—'}</td>
+                    <td><span class="table-status ${statusClass}">${record.status || 'Unknown'}</span></td>
+                    <td>${photoHtml}</td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+        }
+
+        function exportAttendance() {
+            // Create CSV content
+            let csv = 'Date,Day,Check In,Check Out,Duration,Status\n';
+            
+            attendanceRecords.forEach(record => {
+                const date = new Date(record.date);
+                const formattedDate = date.toLocaleDateString('en-US', { 
+                    year: 'numeric',
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+                
+                csv += `"${formattedDate}","${dayName}","${record.checkIn || '-'}","${record.checkOut || '-'}","${record.duration || '-'}","${record.status || 'Unknown'}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `attendance_${profileData.name.replace(/\s+/g, '_')}_${formatDate(new Date())}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            showModal('Export Successful', 'Attendance record has been exported to CSV.');
+        }
+
+        // To-Do Functions
+        function renderTodos() {
+            const list = document.getElementById('todoList');
+            list.innerHTML = '';
+            
+            if (todos.length === 0) {
+                list.innerHTML = '<div class="empty-state">No tasks yet. Add one to get started!</div>';
+                return;
+            }
+            
+            todos.forEach(todo => {
+                const li = document.createElement('li');
+                li.className = 'todo-item' + (todo.completed ? ' completed' : '');
+                
+                li.innerHTML = `
+                    <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} 
+                           onchange="toggleTodo(${todo.id})">
+                    <span class="todo-text">${todo.text}</span>
+                    <button class="todo-delete" onclick="deleteTodo(${todo.id})">✕</button>
+                `;
+                
+                list.appendChild(li);
+            });
+        }
+
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            const text = input.value.trim();
+            
+            if (text === '') {
+                showModal('Error', 'Please enter a task description.');
+                return;
+            }
+            
+            const newTodo = {
+                id: Date.now(),
+                text: text,
+                completed: false
+            };
+            
+            todos.unshift(newTodo);
+            input.value = '';
+            renderTodos();
+            saveData();
+            updateStats();
+        }
+
+        function toggleTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.completed = !todo.completed;
+                renderTodos();
+                saveData();
+                updateStats();
+            }
+        }
+
+        function deleteTodo(id) {
+            todos = todos.filter(t => t.id !== id);
+            renderTodos();
+            saveData();
+            updateStats();
+        }
+
+        // Announcements Functions
+        function renderAnnouncements() {
+            const list = document.getElementById('announcementsList');
+            list.innerHTML = '';
+            
+            announcements.forEach(announcement => {
+                const div = document.createElement('div');
+                div.className = 'announcement-item';
+                
+                const badgeClass = announcement.type === 'important' ? 'badge-important' : 'badge-info';
+                const badgeText = announcement.type === 'important' ? 'Important' : 'Info';
+                
+                div.innerHTML = `
+                    <div class="announcement-header">
+                        <h4 class="announcement-title">${announcement.title}</h4>
+                        <span class="announcement-date">${formatDisplayDate(announcement.date)}</span>
+                    </div>
+                    <p class="announcement-content">${announcement.content}</p>
+                    <span class="announcement-badge ${badgeClass}">${badgeText}</span>
+                `;
+                
+                list.appendChild(div);
+            });
+        }
+
+        // Stats Functions
+        function updateStats() {
+            const completedRecords = attendanceRecords.filter(r => r.checkIn && r.checkOut).length;
+            const totalDays = attendanceRecords.length;
+            const attendanceRate = totalDays > 0 ? Math.round((completedRecords/totalDays)*100) : 0;
+            
+            const completedTasks = todos.filter(t => t.completed).length;
+            const activeTasks = todos.filter(t => !t.completed).length;
+            
+            document.getElementById('attendanceRate').textContent = attendanceRate + '%';
+            document.getElementById('tasksCompleted').textContent = completedTasks;
+            document.getElementById('activeTasks').textContent = activeTasks;
+            document.getElementById('daysPresent').textContent = completedRecords;
+        }
+
+        // Utility Functions
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function formatDisplayDate(dateStr) {
+            const date = new Date(dateStr);
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function showModal(title, message) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close camera modal on outside click
+        document.getElementById('cameraModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCamera();
+            }
+        });
+
+        // Close edit profile modal on outside click
+        document.getElementById('editProfileModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditProfile();
+            }
+        });
+    </script>
+</body>
+</html>
